@@ -6,8 +6,8 @@ class Ticket extends Conectar {
         parent::set_names();
 
         $sql = "INSERT INTO tm_ticket
-                (usu_id, cat_id, tick_asunto, tick_descrip, fecha_crea, est)
-                VALUES (?, ?, ?, ?, NOW(), 1)";
+                (usu_id, cat_id, tick_asunto, tick_descrip, fecha_crea, est, tick_estado)
+                VALUES (?, ?, ?, ?, NOW(), 1, 'Abierto')";
 
         $stmt = $conectar->prepare($sql);
         $stmt->bindValue(1, $usu_id);
@@ -34,11 +34,23 @@ class Ticket extends Conectar {
                     tm_ticket.tick_estado,
                     tm_usuario.nombre,
                     tm_usuario.apellido,
-                    tm_categoria.cat_nom
+                    tm_categoria.cat_nom,
+                    COALESCE(CONCAT(tm_usuario_soporte.nombre, ' ', tm_usuario_soporte.apellido), '-') as cerrado_por
                 FROM tm_ticket
                 INNER JOIN tm_categoria ON tm_ticket.cat_id = tm_categoria.cat_id
                 INNER JOIN tm_usuario ON tm_ticket.usu_id = tm_usuario.usu_id
-                WHERE tm_ticket.usu_id = ?";
+                LEFT JOIN (
+                    SELECT DISTINCT 
+                        td_ticketdetalle.tick_id,
+                        tm_usuario.nombre,
+                        tm_usuario.apellido
+                    FROM td_ticketdetalle
+                    INNER JOIN tm_usuario ON td_ticketdetalle.usu_id = tm_usuario.usu_id
+                    WHERE tm_usuario.rol_id = 2
+                    ORDER BY td_ticketdetalle.fech_crea DESC
+                ) tm_usuario_soporte ON tm_ticket.tick_id = tm_usuario_soporte.tick_id
+                WHERE tm_ticket.usu_id = ?
+                ORDER BY tm_ticket.fecha_crea DESC";
 
         $stmt = $conectar->prepare($sql);
         $stmt->bindValue(1, $usu_id);
@@ -62,10 +74,22 @@ class Ticket extends Conectar {
                     tm_ticket.tick_estado,
                     tm_usuario.nombre,
                     tm_usuario.apellido,
-                    tm_categoria.cat_nom
+                    tm_categoria.cat_nom,
+                    COALESCE(CONCAT(tm_usuario_soporte.nombre, ' ', tm_usuario_soporte.apellido), '-') as cerrado_por
                 FROM tm_ticket
                 INNER JOIN tm_categoria ON tm_ticket.cat_id = tm_categoria.cat_id
-                INNER JOIN tm_usuario ON tm_ticket.usu_id = tm_usuario.usu_id";
+                INNER JOIN tm_usuario ON tm_ticket.usu_id = tm_usuario.usu_id
+                LEFT JOIN (
+                    SELECT DISTINCT 
+                        td_ticketdetalle.tick_id,
+                        tm_usuario.nombre,
+                        tm_usuario.apellido
+                    FROM td_ticketdetalle
+                    INNER JOIN tm_usuario ON td_ticketdetalle.usu_id = tm_usuario.usu_id
+                    WHERE tm_usuario.rol_id = 2
+                    ORDER BY td_ticketdetalle.fech_crea DESC
+                ) tm_usuario_soporte ON tm_ticket.tick_id = tm_usuario_soporte.tick_id
+                ORDER BY tm_ticket.fecha_crea DESC";
 
         $stmt = $conectar->prepare($sql);
         $stmt->execute();

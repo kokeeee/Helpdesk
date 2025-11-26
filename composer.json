@@ -1,0 +1,14 @@
+{
+  "name": "helpdesk-app",
+  "description": "Sistema de Tickets HelpDesk",
+  "type": "project",
+  "require": {
+    "php": "^7.4|^8.0"
+  },
+  "require-dev": {},
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  }
+}

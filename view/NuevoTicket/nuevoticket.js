@@ -55,8 +55,16 @@ function guardar(e){
         success: function(datos){
             console.log("Respuesta del servidor:", datos);
             if (datos && !isNaN(datos)) {
-                alert("Ticket creado exitosamente con ID: " + datos);
-                window.location = "../../view/home/index.php";
+                swal({
+                    title: "¡Éxito!",
+                    text: "Ticket creado exitosamente con ID: #" + datos,
+                    type: "success",
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "Ver Ticket"
+                }, function() {
+                    // Redirigir a Consultar Ticket
+                    window.location = "../../view/ConsultarTicket/index.php";
+                });
             } else {
                 alert("Error: " + datos);
             }

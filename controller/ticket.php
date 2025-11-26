@@ -47,6 +47,7 @@
                 } else {
                     $sub_array[] = '<span class="label label-pill label-success">Abierto</span>';
                 }
+                $sub_array[] = $row["cerrado_por"];
                 $sub_array[] = date("d/m/y H:i", strtotime($row["fecha_crea"]));
                 $sub_array[] = '<button type="button" onClick="ver_ticket('.$row["tick_id"].');" id="'.$row["tick_id"].'" class="btn btn-inline btn-primary btn-sm btn_ver"><i class="fa fa-eye" aria-hidden="true"></i></button>';
                 $data[] = $sub_array;
@@ -75,6 +76,7 @@
                 } else {
                     $sub_array[] = '<span class="label label-pill label-success">Abierto</span>';
                 }
+                $sub_array[] = $row["cerrado_por"];
                 $sub_array[] = date("d/m/y h:i:s", strtotime($row["fecha_crea"]));
                 $sub_array[] = '<button type="button" onClick="ver_ticket('.$row["tick_id"].');" id="'.$row["tick_id"].'" class="btn btn-inline btn-primary btn-sm btn_ver"><i class="fa fa-eye" aria-hidden="true"></i></button>';
                 $data[] = $sub_array;

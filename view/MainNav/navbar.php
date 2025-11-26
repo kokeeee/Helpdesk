@@ -43,6 +43,13 @@
                             <span class="lbl">Consultar Ticket</span>
                         </a>
                     </li>
+
+                    <li class="blue-dirty">
+                        <a href="..\Estadisticas\">
+                            <span class="glyphicon glyphicon-th"></span>
+                            <span class="lbl">Estadisticas</span>
+                        </a>
+                    </li>
                     
                     <li class="blue-dirty">
                         <a href="..\MntUsuario\">

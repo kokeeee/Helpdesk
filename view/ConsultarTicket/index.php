@@ -39,8 +39,9 @@
 						<tr>
 							<th style="width: 5%;">Nro.Ticket</th>
 							<th style="width: 15%;">Categoria</th>
-							<th class="d-none d-sm-table-cell" style="width: 40%;">Asunto</th>
+							<th class="d-none d-sm-table-cell" style="width: 30%;">Asunto</th>
 							<th class="d-none d-sm-table-cell" style="width: 5%;">Estado</th>
+							<th class="d-none d-sm-table-cell" style="width: 15%;">Ticket administrado por:</th>
 							<th class="d-none d-sm-table-cell" style="width: 20%;">Fecha de Creación</th>
 							<th class="d-none d-sm-table-cell" style="width: 5%;">Ver</th>
 						</tr>
