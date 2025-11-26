@@ -1,0 +1,8 @@
+{
+  "name": "helpdesk/app",
+  "description": "Sistema de Gestión de Tickets HelpDesk",
+  "type": "project",
+  "require": {
+    "php": "^7.4"
+  }
+}
