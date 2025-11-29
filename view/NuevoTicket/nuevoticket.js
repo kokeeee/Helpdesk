@@ -19,9 +19,41 @@ $(document).ready(function() {
         lang: "es-ES"
     });
 
+    // Validar archivo al cambiar
+    $('#fileElem').on('change', function() {
+        validar_archivos();
+    });
+
     init();
 });
 
+function validar_archivos() {
+    var files = document.getElementById('fileElem').files;
+    var extensiones_permitidas = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt', 'jpg', 'jpeg', 'png', 'gif'];
+    var tamaño_maximo = 5 * 1024 * 1024; // 5MB
+
+    if (files.length > 0) {
+        for (var i = 0; i < files.length; i++) {
+            var archivo = files[i];
+            var extension = archivo.name.split('.').pop().toLowerCase();
+            
+            // Validar extensión
+            if (extensiones_permitidas.indexOf(extension) === -1) {
+                swal("Cuidado!", "El archivo " + archivo.name + " tiene una extensión no permitida. Solo se permiten: " + extensiones_permitidas.join(", "), "warning");
+                document.getElementById('fileElem').value = '';
+                return false;
+            }
+
+            // Validar tamaño
+            if (archivo.size > tamaño_maximo) {
+                swal("Cuidado!", "El archivo " + archivo.name + " excede el tamaño máximo de 5MB", "warning");
+                document.getElementById('fileElem').value = '';
+                return false;
+            }
+        }
+    }
+    return true;
+}
 
 function guardar(e){
     e.preventDefault();
@@ -41,6 +73,11 @@ function guardar(e){
     }
     if (!descrip || descrip === '<p><br></p>') {
         swal("Cuidado!", "La descripcion es obligatoria", "warning");
+        return;
+    }
+
+    // Validar archivos
+    if (!validar_archivos()) {
         return;
     }
     

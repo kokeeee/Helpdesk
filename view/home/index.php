@@ -46,28 +46,26 @@
 	                            </div>
 	                        </article>
 	                    </div>
-					</div>
 				</div>
 			</div>
-
-			<section class="card">
-				<header class="card-header">
-					Grafico Estadístico
-				</header>
-				<div class="card-block">
-					<div id="divgrafico" style="height: 250px;"></div>
-				</div>
-			</section>
-			
 		</div>
 	</div>
-	<!-- Contenido -->
+	<!-- Contenido -->	<?php require_once("../MainJs/js.php");?>
 
-	<?php require_once("../MainJs/js.php");?>
-
-	<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-	<script type="text/javascript" src="home.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+	
+	<script type="text/javascript">
+		$(document).ready(function(){
+			// Cargar home.js después de que Raphael y Morris estén listos
+			var checkLibraries = setInterval(function() {
+				if (typeof Morris !== 'undefined' && typeof Raphael !== 'undefined') {
+					clearInterval(checkLibraries);
+					$.getScript("home.js");
+				}
+			}, 50);
+		});
+	</script>
 
 </body>
 </html>

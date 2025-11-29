@@ -34,8 +34,7 @@
                     <div class="form-group">
                         <label class="form-label" for="rol_id">Rol</label>
                         <select class="select2" id="rol_id" name="rol_id">
-                            <option value="1">Usuario</option>
-                            <option value="2">Soporte</option>
+                            <option value="2" selected>Soporte</option>
                         </select>
                     </div>
 

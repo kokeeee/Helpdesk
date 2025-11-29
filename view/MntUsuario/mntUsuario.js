@@ -200,6 +200,11 @@ function guardaryeditar() {
         return false;
     }
 
+    if (rol_id != 2) {
+        swal("Advertencia!", "Solo se pueden crear usuarios de Soporte", "warning");
+        return false;
+    }
+
     $.post("../../controller/usuario.php?op=guardaryeditar", {
         usu_id: usu_id,
         nombre: nombre,

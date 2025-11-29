@@ -12,7 +12,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Implementos Epysa</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 </head>
@@ -76,24 +76,34 @@
 
                 <div class="mx-auto login-input-half mt-3 mb-3">
                   <div class="d-flex justify-content-between">
+                    <a href="#" id="btnusuario" class="text-dark">Acceso Usuario</a>
                     <a href="#" id="btnsoporte" class="text-dark">Acceso Soporte</a>
-                    <a href="reset-password.html" id="cambiar_contrasena" class="text-dark">Cambiar Contraseña</a>
                   </div>
                 </div>
 
                 <input type="hidden" name = "enviar" class = "form-control" value = "si">
-                  <input type="hidden" id="login_mode" name="login_mode" value="user">
-                  <input type="hidden" id="rol_id" name="rol_id" value="">
+                <input type="hidden" id="login_mode" name="login_mode" value="user">
+                <input type="hidden" id="rol_id" name="rol_id" value="">
                 <div class="text-center mt-3 mb-3">
                   <button type = "submit" class = "btn" style="background:#5bc0de;color:#fff;border:2px solid #4ac0da;min-width:220px;border-radius:6px;padding:8px 22px;">Iniciar Sesión</button>
                 </div>
                   <script>
                     (function(){
-                      var soporteLink = document.getElementById('btnsoporte');
+                      var btnUsuario = document.getElementById('btnusuario');
+                      var btnSoporte = document.getElementById('btnsoporte');
                       var signTitle = document.getElementById('signTitle');
                       var loginMode = document.getElementById('login_mode');
                       var imgTipo = document.getElementById('imgtipo');
-                      if(!soporteLink || !signTitle || !loginMode || !imgTipo) return;
+                      if(!btnUsuario || !btnSoporte || !signTitle || !loginMode || !imgTipo) return;
+
+                      // Función para activar modo usuario
+                      function activateUser(){
+                        signTitle.textContent = 'Acceso Usuario';
+                        loginMode.value = 'user';
+                        var rolInput = document.getElementById('rol_id');
+                        if(rolInput) rolInput.value = '1'; // rol_id 1 = Usuario
+                        imgTipo.src = '../public/img/usuario.png'; // Cambiar imagen a usuario
+                      }
 
                       // Función para activar modo soporte
                       function activateSupport(){
@@ -102,30 +112,37 @@
                         var rolInput = document.getElementById('rol_id');
                         if(rolInput) rolInput.value = '2'; // rol_id 2 = Soporte
                         imgTipo.src = '../public/img/soporte.jpg'; // Cambiar imagen a soporte
-                        soporteLink.textContent = 'Acceso Usuario';
-                        soporteLink.classList.add('fw-bold');
+                        btnSoporte.textContent = 'Acceso Super Admin';
+                        btnSoporte.classList.add('fw-bold');
                       }
 
-                      // Función para volver a modo usuario
-                      function activateUser(){
-                        signTitle.textContent = 'Acceso Usuario';
-                        loginMode.value = 'user';
+                      // Función para activar modo super admin
+                      function activateSuperAdmin(){
+                        signTitle.textContent = 'Acceso Super Admin';
+                        loginMode.value = 'superadmin';
                         var rolInput = document.getElementById('rol_id');
-                        if(rolInput) rolInput.value = '1'; // rol_id 1 = Usuario
-                        imgTipo.src = '../public/img/usuario.png'; // Cambiar imagen a usuario
-                        soporteLink.textContent = 'Acceso Soporte';
-                        soporteLink.classList.remove('fw-bold');
+                        if(rolInput) rolInput.value = '3'; // rol_id 3 = Super Admin
+                        imgTipo.src = '../public/img/soporte.jpg'; // Cambiar imagen a super admin
+                        btnSoporte.textContent = 'Acceso Soporte';
+                        btnSoporte.classList.remove('fw-bold');
                       }
 
                       // Estado inicial: Modo usuario (rol_id = 1)
                       activateUser();
 
-                      soporteLink.addEventListener('click', function(e){
+                      // Botón Usuario. siempre activa modo usuario
+                      btnUsuario.addEventListener('click', function(e){
                         e.preventDefault();
-                        if(loginMode.value === 'user'){
-                          activateSupport();
+                        activateUser();
+                      });
+
+                      // Botón Soporte. alterna entre Soporte y Super Admin
+                      btnSoporte.addEventListener('click', function(e){
+                        e.preventDefault();
+                        if(loginMode.value === 'support'){
+                          activateSuperAdmin();
                         } else {
-                          activateUser();
+                          activateSupport();
                         }
                       });
                     })();

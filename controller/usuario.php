@@ -6,13 +6,24 @@
 
     switch ($_GET["op"]) {
         case "guardaryeditar":
+            // Verificar que el usuario sea SuperAdmin (rol_id = 3) para gestionar usuarios
+            if (!isset($_SESSION["rol_id"]) || $_SESSION["rol_id"] != 3) {
+                echo json_encode(array("status" => "error", "mensaje" => "No tienes permiso para acceder a esta sección. Solo SuperAdmin puede gestionar usuarios."));
+                exit();
+            }
             try {
+                // Validar que SuperAdmin solo puede crear/editar usuarios de Soporte (rol_id = 2)
+                if ($_POST["rol_id"] != 2) {
+                    echo json_encode(array("status" => "error", "mensaje" => "SuperAdmin solo puede gestionar usuarios de Soporte"));
+                    exit();
+                }
+
                 if (empty($_POST["usu_id"])) {
                     $usuario->insert_usuario($_POST["nombre"], $_POST["apellido"], $_POST["correo"], $_POST["contrasenia"], $_POST["rol_id"]);
-                    echo json_encode(array("status" => "success", "mensaje" => "Usuario creado correctamente"));
+                    echo json_encode(array("status" => "success", "mensaje" => "Usuario de Soporte creado correctamente"));
                 } else {
                     $usuario->update_usuario($_POST["usu_id"], $_POST["nombre"], $_POST["apellido"], $_POST["correo"], $_POST["contrasenia"], $_POST["rol_id"]);
-                    echo json_encode(array("status" => "success", "mensaje" => "Usuario actualizado correctamente"));
+                    echo json_encode(array("status" => "success", "mensaje" => "Usuario de Soporte actualizado correctamente"));
                 }
             } catch (Exception $e) {
                 echo json_encode(array("status" => "error", "mensaje" => $e->getMessage()));
@@ -20,21 +31,25 @@
         break;
 
         case "listar":
+            // Verificar que el usuario sea SuperAdmin (rol_id = 3) para listar usuarios
+            if (!isset($_SESSION["rol_id"]) || $_SESSION["rol_id"] != 3) {
+                echo json_encode(array("status" => "error", "mensaje" => "No tienes permiso para acceder a esta sección. Solo SuperAdmin puede gestionar usuarios."));
+                exit();
+            }
             $datos = $usuario->get_usuario();
             $data = Array();
 
             foreach($datos as $row){
+                // SuperAdmin solo puede gestionar usuarios de Soporte (rol_id = 2)
+                if ($row["rol_id"] != 2) {
+                    continue;
+                }
+
                 $sub_array = array();
                 $sub_array[] = $row["nombre"];
                 $sub_array[] = $row["apellido"];
                 $sub_array[] = $row["correo"];
-
-                if ($row["rol_id"] == 1) {
-                    $sub_array[] = '<span class="label label-pill label-success">Usuario</span>';
-                } else {
-                    $sub_array[] = '<span class="label label-pill label-info">Soporte</span>';
-                }
-
+                $sub_array[] = '<span class="label label-pill label-info">Soporte</span>';
                 $sub_array[] = $row["contrasenia"];
 
                 if ($row["estado"] == 1) {
@@ -59,6 +74,11 @@
         break;
     
         case "eliminar":
+            // Verificar que el usuario sea SuperAdmin (rol_id = 3) para eliminar usuarios
+            if (!isset($_SESSION["rol_id"]) || $_SESSION["rol_id"] != 3) {
+                echo json_encode(array("status" => "error", "mensaje" => "No tienes permiso para acceder a esta sección. Solo SuperAdmin puede gestionar usuarios."));
+                exit();
+            }
             try {
                 $resultado = $usuario->delete_usuario($_POST["usu_id"]);
                 if ($resultado) {
@@ -72,9 +92,20 @@
         break;
 
         case "mostrar":
+            // Verificar que el usuario sea SuperAdmin (rol_id = 3) para mostrar usuarios
+            if (!isset($_SESSION["rol_id"]) || $_SESSION["rol_id"] != 3) {
+                echo json_encode(array("status" => "error", "mensaje" => "No tienes permiso para acceder a esta sección. Solo SuperAdmin puede gestionar usuarios."));
+                exit();
+            }
             $datos = $usuario->get_usuario_por_id($_POST["usu_id"]);
             if (is_array($datos) == true and count($datos) > 0) {
                 foreach ($datos as $row) {
+                    // SEGURIDAD: SuperAdmin solo puede ver usuarios de Soporte (rol_id = 2)
+                    if ($row["rol_id"] != 2) {
+                        echo json_encode(array("status" => "error", "mensaje" => "No tienes permiso para ver este usuario"));
+                        exit();
+                    }
+                    
                     $output["usu_id"] = $row["usu_id"];
                     $output["nombre"] = $row["nombre"];
                     $output["apellido"] = $row["apellido"];
@@ -116,6 +147,21 @@
         case "grafico":
             $datos = $usuario->get_usuario_grafico_por_id($_POST["usu_id"]);
             echo json_encode($datos);
+        break;
+
+        case "cambiar_contrasenia":
+            if (!isset($_SESSION["usu_id"])) {
+                echo json_encode(array("success" => false, "message" => "Debes estar autenticado"));
+                exit();
+            }
+
+            $usu_id = $_SESSION["usu_id"];
+            $pass_actual = $_POST["pass_actual"];
+            $pass_nueva = $_POST["pass_nueva"];
+            $pass_confirmar = $_POST["pass_confirmar"];
+
+            $resultado = $usuario->cambiar_contrasenia($usu_id, $pass_actual, $pass_nueva, $pass_confirmar);
+            echo json_encode($resultado);
         break;
     }
     

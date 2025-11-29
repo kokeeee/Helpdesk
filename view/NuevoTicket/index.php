@@ -46,18 +46,16 @@
 							</fieldset>
 						</div>
 
-						<div class="col-lg-6">
-							<fieldset class="form-group">
-								<label class="form-label semibold" for="exampleInput">Categoria</label>
-								<select id="cat_id" name="cat_id" class="form-control">
-								</select>
-							</fieldset>
-						</div>
-
-						<div class="col-lg-12">
+					<div class="col-lg-6">
+						<fieldset class="form-group">
+							<label class="form-label semibold" for="exampleInput">Categoria</label>
+							<select id="cat_id" name="cat_id" class="form-control">
+							</select>
+						</fieldset>
+					</div>						<div class="col-lg-12">
 							<fieldset class="form-group">
 								<label class="form-label semibold" for="tick_descrip">Descripción</label>
-								<label for="">Aqui debes escpificar tus consultas, uno de nuestros trabajadores te responderá a la brevedad.</label>
+								<label for="">Aqui debes especificar tus consultas, uno de nuestros trabajadores te responderá a la brevedad.</label>
 								<div class="summernote-theme-1">
 									<textarea id="tick_descrip" name="tick_descrip" class="summernote" name="name"></textarea>
 								</div>

@@ -54,6 +54,19 @@ if (isset($_SESSION["usu_id"])) {
                 </fieldset>
               </div>
 
+              <div class="col-lg-6">
+                <fieldset class="form-group">
+                  <label class="form-label semibold" for="tick_prioridad">Prioridad</label>
+                  <input type="text" class="form-control" id="tick_prioridad" name="tick_prioridad" readonly>
+                </fieldset>
+              </div>
+
+              <div class="col-lg-6">
+                <fieldset class="form-group">
+                  <label class="form-label semibold" for="fech_cierre">Fecha de Cierre</label>
+                  <input type="text" class="form-control" id="fech_cierre" name="fech_cierre" readonly>
+                </fieldset>
+              </div>
 
               <div class="col-lg-12">
                 <fieldset class="form-group">
@@ -62,6 +75,16 @@ if (isset($_SESSION["usu_id"])) {
                     <textarea id="tickd_descripusu" name="tickd_descripusu" class="summernote" name="name"></textarea>
                   </div>
 
+                </fieldset>
+              </div>
+
+              <!-- Sección de Archivos Adjuntos -->
+              <div class="col-lg-12">
+                <fieldset class="form-group">
+                  <label class="form-label semibold">Archivos Adjuntos</label>
+                  <div id="archivos_adjuntos" class="list-group">
+                    <p class="text-muted">No hay archivos adjuntos</p>
+                  </div>
                 </fieldset>
               </div>
 
@@ -88,9 +111,19 @@ if (isset($_SESSION["usu_id"])) {
               <div class="col-lg-12">
                 <button type="button" id="btnenviar" class="btn btn-rounded btn-inline btn-primary">Enviar</button>
                 <button type="button" id="btncerrarticket" class="btn btn-rounded btn-inline btn-warning">Cerrar Ticket</button>
+                <button type="button" id="btnencuesta" class="btn btn-rounded btn-inline btn-success" style="display:none;">Realizar Encuesta</button>
               </div>
           </div>
-			  </div>
+        </div>
+
+        <div class="box-typical box-typical-padding" id="pnlreabrir" style="display:none;">
+          <div class="row">
+            <div class="col-lg-12">
+              <p class="text-muted"><strong>El ticket está cerrado</strong></p>
+              <button type="button" id="btnreabrirticket" class="btn btn-rounded btn-inline btn-warning">Re-abrir Ticket</button>
+            </div>
+          </div>
+        </div>
 
       </div>
     </div>

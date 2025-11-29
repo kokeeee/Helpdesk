@@ -31,6 +31,9 @@
 
 <link rel="stylesheet" href="../../public/css/main.css">
 
+<!-- CSS para submenú desplegable -->
+<link rel="stylesheet" href="../../public/css/submenu.css">
+
 <!-- Librerias Css -->
 <link rel="stylesheet" href="../../public/css/lib/datatables-net/datatables.min.css">
 <link rel="stylesheet" href="../../public/css/separate/vendor/datatables-net.min.css">
@@ -62,5 +65,70 @@ body {
 .jspContainer {
 	overflow: visible !important;
 	height: auto !important;
+}
+
+/* Estilos para el submenú desplegable */
+.menu-expandible {
+	position: relative !important;
+}
+
+.menu-expandible > .toggle-submenu {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: space-between !important;
+	cursor: pointer !important;
+	width: 100% !important;
+}
+
+.menu-expandible .submenu-icon {
+	font-size: 12px !important;
+	transition: transform 0.3s ease !important;
+	margin-left: auto !important;
+	padding-left: 10px !important;
+	display: inline-block !important;
+}
+
+.menu-expandible.active .submenu-icon {
+	transform: rotate(180deg) !important;
+}
+
+.menu-expandible > .submenu {
+	list-style: none !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	max-height: 0 !important;
+	overflow: hidden !important;
+	background-color: rgba(0, 0, 0, 0.1) !important;
+	transition: max-height 0.4s ease, opacity 0.4s ease, padding 0.4s ease !important;
+	opacity: 0 !important;
+	display: block !important;
+}
+
+.menu-expandible.active > .submenu {
+	max-height: 500px !important;
+	opacity: 1 !important;
+	padding: 10px 0 !important;
+}
+
+.menu-expandible .submenu li {
+	margin: 0 !important;
+	padding: 0 !important;
+	list-style: none !important;
+}
+
+.menu-expandible .submenu li a {
+	display: block !important;
+	padding: 12px 20px 12px 50px !important;
+	color: #fff !important;
+	text-decoration: none !important;
+	font-size: 14px !important;
+	transition: all 0.3s ease !important;
+	border-left: 3px solid transparent !important;
+}
+
+.menu-expandible .submenu li a:hover {
+	background-color: rgba(0, 0, 0, 0.2) !important;
+	border-left-color: #1abc9c !important;
+	padding-left: 55px !important;
 }
 </style>

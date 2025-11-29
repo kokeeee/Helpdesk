@@ -1,12 +1,100 @@
 <?php
   require_once("../../config/conexion.php"); 
-  if(isset($_SESSION["usu_id"]) && $_SESSION["rol_id"] == 2){ 
+  if(isset($_SESSION["usu_id"]) && ($_SESSION["rol_id"] == 2 || $_SESSION["rol_id"] == 3)){ 
 ?>
 <!DOCTYPE html>
 <html>
     <?php require_once("../MainHead/head.php");?>
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
 	<title>Estadísticas</title>
+	<style>
+		/* Estilos por defecto para PC (sin cambios) */
+		#grafico_estado,
+		#grafico_categorias,
+		#grafico_carga {
+			height: 300px;
+		}
+
+		/* Media queries solo para móvil */
+		@media screen and (max-width: 992px) {
+			/* Tablets */
+			#grafico_estado,
+			#grafico_categorias,
+			#grafico_carga {
+				height: 280px;
+			}
+			
+			.card-header h2 {
+				font-size: 15px;
+			}
+		}
+		
+		@media screen and (max-width: 768px) {
+			/* Tablets pequeños y móviles */
+			#grafico_estado,
+			#grafico_categorias,
+			#grafico_carga {
+				height: 350px;
+			}
+			
+			.col-lg-6,
+			.col-lg-8,
+			.col-lg-4 {
+				margin-bottom: 20px;
+			}
+			
+			.col-sm-4 {
+				margin-bottom: 15px;
+			}
+			
+			.table {
+				font-size: 12px;
+			}
+			
+			.card-header h2 {
+				font-size: 16px;
+				margin: 5px 0;
+			}
+			
+			.card-header {
+				padding: 15px;
+			}
+			
+			.card-block {
+				padding: 15px 10px;
+			}
+			
+			.statistic-box .number {
+				font-size: 32px;
+				line-height: 1.2;
+			}
+			
+			.statistic-box .caption {
+				font-size: 13px;
+			}
+		}
+		
+		@media screen and (max-width: 576px) {
+			/* Móviles pequeños */
+			#grafico_estado,
+			#grafico_categorias,
+			#grafico_carga {
+				height: 320px;
+			}
+			
+			.statistic-box .number {
+				font-size: 28px;
+			}
+			
+			.card-header h2 {
+				font-size: 14px;
+			}
+			
+			.table {
+				font-size: 11px;
+			}
+		}
+	</style>
 </head>
 <body class="with-side-menu">
 
@@ -19,14 +107,15 @@
 	<!-- Contenido -->
 	<div class="page-content">
 		<div class="container-fluid">
-			<header class="section-header">
-				<div class="tbl">
-					<div class="tbl-row">
-						<div class="tbl-cell">
-							<h3>Estadísticas del Equipo de Soporte</h3>
-							<ol class="breadcrumb breadcrumb-simple">
-								<li><a href="#">Home</a></li>
-								<li class="active">Estadísticas</li>
+
+		<header class="section-header">
+			<div class="tbl">
+				<div class="tbl-row">
+					<div class="tbl-cell">
+						<h3>Estadísticas del Equipo de Soporte</h3>
+						<ol class="breadcrumb breadcrumb-simple">
+							<li><a href="#">Home</a></li>
+							<li class="active">Estadísticas</li>
 							</ol>
 						</div>
 					</div>

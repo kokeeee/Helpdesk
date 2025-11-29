@@ -136,7 +136,7 @@ $(document).on("click","#btnenviar", function(){
         $.post("../../controller/ticket.php?op=insertdetalle", {tick_id : tick_id, usu_id : usu_id, tickd_descrip : tickd_descrip}, function (data) {
             listardetalle(tick_id);
             $('#tickd_descrip').summernote('reset');
-            swal("Respuesta enviada", "Tu respuesta pronto será respondida", "success");
+            swal("Respuesta enviada", "Tu consulta será respondida a la brevedad", "success");
         });
     }
 });
@@ -148,8 +148,8 @@ $(document).on("click","#btncerrarticket", function(){
         type: "warning",
         showCancelButton: true,
         confirmButtonClass: "btn-warning",
-        confirmButtonText: "Si",
-        cancelButtonText: "No",
+        confirmButtonText: "Cerrar",
+        cancelButtonText: "Cancelar",
         closeOnConfirm: false
     },
     function(isConfirm) {
@@ -176,6 +176,200 @@ $(document).on("click","#btncerrarticket", function(){
     });
 });
 
+$(document).on("click","#btnreabrirticket", function(){
+    swal({
+        title: "Confirmación",
+        text: "Estás seguro de Re-abrir el Ticket?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonClass: "btn-warning",
+        confirmButtonText: "Sí",
+        cancelButtonText: "No",
+        closeOnConfirm: false
+    },
+    function(isConfirm) {
+        if (isConfirm) {
+            var tick_id = getUrlParameter('ID');
+            var usu_id = $('#user_idx').val();
+            $.post("../../controller/ticket.php?op=reabrir", { tick_id:tick_id , usu_id:usu_id}, function (data) {
+                var response = JSON.parse(data);
+                console.log("Respuesta del servidor:", response);
+                
+                if (response.success) {
+                    listardetalle(tick_id);
+                    
+                    swal({
+                        title: "¡Listo!",
+                        text: response.message,
+                        type: "success",
+                        confirmButtonClass: "btn-success"
+                    });
+                } else {
+                    swal({
+                        title: "Error",
+                        text: response.message,
+                        type: "error",
+                        confirmButtonClass: "btn-danger"
+                    });
+                }
+            });
+        }
+    });
+});
+
+$(document).on("click","#btnencuesta", function(){
+    var tick_id = getUrlParameter('ID');
+    
+    swal({
+        title: "Encuesta de Satisfacción",
+        text: "¿Cuán satisfecho estás con la solución?",
+        type: "info",
+        html: true,
+        content: {
+            element: "div",
+            attributes: {
+                innerHTML: `
+                    <div class="form-group">
+                        <label>Calificación (1-5)</label>
+                        <select id="encuesta_calificacion" class="form-control">
+                            <option value="">-- Selecciona --</option>
+                            <option value="1">1 - Muy Insatisfecho</option>
+                            <option value="2">2 - Insatisfecho</option>
+                            <option value="3">3 - Neutral</option>
+                            <option value="4">4 - Satisfecho</option>
+                            <option value="5">5 - Muy Satisfecho</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Comentarios (opcional)</label>
+                        <textarea id="encuesta_comentario" class="form-control" rows="3" placeholder="Comparte tu opinión..."></textarea>
+                    </div>
+                `
+            }
+        },
+        showCancelButton: true,
+        confirmButtonText: "Enviar Encuesta",
+        cancelButtonText: "Cancelar",
+        closeOnConfirm: false
+    }, function(isConfirm) {
+        if (isConfirm) {
+            var calificacion = $('#encuesta_calificacion').val();
+            var comentario = $('#encuesta_comentario').val();
+            
+            if (!calificacion) {
+                swal("Advertencia", "Debes seleccionar una calificación", "warning");
+                return;
+            }
+            
+            $.post("../../controller/ticket.php?op=encuesta", {
+                tick_id: tick_id,
+                tick_estre: calificacion,
+                tick_coment: comentario
+            }, function(data) {
+                swal("¡Listo!", "Tu encuesta ha sido registrada", "success");
+                listardetalle(tick_id);
+            });
+        }
+    });
+});
+
+$(document).on("click","#btnreabrirticket", function(){
+    swal({
+        title: "Confirmación",
+        text: "Estás seguro de Re-abrir el Ticket?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonClass: "btn-warning",
+        confirmButtonText: "Si",
+        cancelButtonText: "No",
+        closeOnConfirm: false
+    },
+    function(isConfirm) {
+        if (isConfirm) {
+            var tick_id = getUrlParameter('ID');
+            var usu_id = $('#user_idx').val();
+            $.post("../../controller/ticket.php?op=reabrir", { tick_id:tick_id , usu_id:usu_id}, function (data) {
+                var response = JSON.parse(data);
+                console.log("Respuesta del servidor:", response);
+                
+                if (response.success) {
+                    listardetalle(tick_id);
+                    
+                    swal({
+                        title: "¡Listo!",
+                        text: response.message,
+                        type: "success",
+                        confirmButtonClass: "btn-success"
+                    });
+                } else {
+                    swal({
+                        title: "Error",
+                        text: response.message,
+                        type: "error",
+                        confirmButtonClass: "btn-danger"
+                    });
+                }
+            });
+        }
+    });
+});
+
+$(document).on("click","#btnencuesta", function(){
+    var tick_id = getUrlParameter('ID');
+    
+    swal({
+        title: "Encuesta de Satisfacción",
+        text: "¿Cuán satisfecho estás con la solución?",
+        type: "info",
+        html: true,
+        content: {
+            element: "div",
+            attributes: {
+                innerHTML: `
+                    <div class="form-group">
+                        <label>Calificación (1-5)</label>
+                        <select id="encuesta_calificacion" class="form-control">
+                            <option value="">-- Selecciona --</option>
+                            <option value="1">1 - Muy Insatisfecho</option>
+                            <option value="2">2 - Insatisfecho</option>
+                            <option value="3">3 - Neutral</option>
+                            <option value="4">4 - Satisfecho</option>
+                            <option value="5">5 - Muy Satisfecho</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Comentarios (opcional)</label>
+                        <textarea id="encuesta_comentario" class="form-control" rows="3" placeholder="Comparte tu opinión..."></textarea>
+                    </div>
+                `
+            }
+        },
+        showCancelButton: true,
+        confirmButtonText: "Enviar Encuesta",
+        cancelButtonText: "Cancelar",
+        closeOnConfirm: false
+    }, function(isConfirm) {
+        if (isConfirm) {
+            var calificacion = $('#encuesta_calificacion').val();
+            var comentario = $('#encuesta_comentario').val();
+            
+            if (!calificacion) {
+                swal("Advertencia", "Debes seleccionar una calificación", "warning");
+                return;
+            }
+            
+            $.post("../../controller/ticket.php?op=encuesta", {
+                tick_id: tick_id,
+                tick_estre: calificacion,
+                tick_coment: comentario
+            }, function(data) {
+                swal("¡Listo!", "Tu encuesta ha sido registrada", "success");
+                listardetalle(tick_id);
+            });
+        }
+    });
+});
+
 function listardetalle(tick_id){
     $.post("../../controller/ticket.php?op=listardetalle", { tick_id : tick_id }, function (data) {
         $('#lbldetalle').html(data);
@@ -187,6 +381,8 @@ function listardetalle(tick_id){
         var estadoLabel = '';
         if (data.tick_estado_texto == "Abierto") {
             estadoLabel = '<span class="label label-pill label-success">Abierto</span>';
+        } else if (data.tick_estado_texto == "En Revision") {
+            estadoLabel = '<span class="label label-pill label-warning">En Revision</span>';
         } else {
             estadoLabel = '<span class="label label-pill label-danger">Cerrado</span>';
         }
@@ -199,17 +395,61 @@ function listardetalle(tick_id){
 
         $('#cat_nom').val(data.cat_nom);
         $('#tick_asunto').val(data.tick_asunto);
+        $('#tick_prioridad').val(data.prio_nom || 'N/A');
+        $('#fech_cierre').val(data.fech_cierre || 'Sin cerrar');
         $('#tickd_descripusu').summernote ('code',data.tick_descrip);
 
-        console.log( data.tick_estado_texto);
+        // Cargar archivos adjuntos
+        $.post("../../controller/ticket.php?op=listar_archivos", { tick_id : tick_id }, function (data) {
+            try {
+                var archivos = JSON.parse(data);
+                var html = '';
+                if (archivos.length > 0) {
+                    html = '<div class="list-group">';
+                    $.each(archivos, function(index, archivo) {
+                        html += '<a href="../../' + archivo.arch_ruta + '" target="_blank" class="list-group-item">' +
+                                '<i class="fa fa-file"></i> ' + archivo.arch_nombre + '</a>';
+                    });
+                    html += '</div>';
+                } else {
+                    html = '<p class="text-muted">No hay archivos adjuntos</p>';
+                }
+                $('#archivos_adjuntos').html(html);
+            } catch(e) {
+                $('#archivos_adjuntos').html('<p class="text-muted">No hay archivos adjuntos</p>');
+            }
+        });
+
+        console.log(data.tick_estado_texto);
+        
+        // Obtener el rol del usuario
+        var rol_id = $('#rol_idx').val();
+        var puede_cerrar = (rol_id == 2 || rol_id == 3); // Solo Soporte (2) y Super Admin (3)
         
         // Ocultar panel de respuesta si el ticket está cerrado
         if (data.tick_estado_texto == "Cerrado"){
             $('#pnldetalle').hide();
             $('#btncerrarticket').hide();
+            // Mostrar encuesta si está cerrado y es usuario regular
+            if (rol_id == 1) {
+                $('#btnencuesta').show();
+            }
+            // Mostrar panel re-abrir solo si el usuario tiene permisos de soporte
+            if (puede_cerrar) {
+                $('#pnlreabrir').show();
+            } else {
+                $('#pnlreabrir').hide();
+            }
         } else {
             $('#pnldetalle').show();
-            $('#btncerrarticket').show();
+            $('#btnencuesta').hide();
+            $('#pnlreabrir').hide();
+            // Mostrar botón cerrar solo si el usuario tiene permisos y el ticket está abierto
+            if (puede_cerrar) {
+                $('#btncerrarticket').show();
+            } else {
+                $('#btncerrarticket').hide();
+            }
         }
     }); 
 }
