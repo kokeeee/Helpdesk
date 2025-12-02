@@ -1,5 +1,8 @@
 <?php
     session_start();
+    
+    // Incluir funciones CSRF
+    require_once(__DIR__ . '/csrf.php');
 
     class Conectar{
         protected $dbh;

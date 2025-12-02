@@ -1,6 +1,9 @@
 <?php
   require_once("../../config/conexion.php"); 
-  if(isset($_SESSION["usu_id"])){ 
+  if(!isset($_SESSION["usu_id"])) {
+    header("Location: ../error404.php?reason=not_logged_in");
+    exit();
+  }
 ?>
 <!DOCTYPE html>
 <html>
@@ -38,6 +41,8 @@
 					<form method = "POST" id = "ticket_form">
 
 						<input type="hidden" id="usu_id" name="usu_id" value="<?php echo $_SESSION["usu_id"] ?>">
+						<!-- Token CSRF para protección contra ataques -->
+						<?php echo campo_csrf(); ?>
 
 						<div class="col-lg-12">
 							<fieldset class="form-group">
@@ -86,8 +91,3 @@
 
 </body>
 </html>
-<?php
-  } else {
-    header("Location:".Conectar::ruta()."index.php");
-  }
-?>

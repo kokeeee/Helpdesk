@@ -1,6 +1,9 @@
 <?php
 require_once("../../config/conexion.php");
-if (isset($_SESSION["usu_id"])) {
+if (!isset($_SESSION["usu_id"])) {
+  header("Location: ../error404.php?reason=not_logged_in");
+  exit();
+}
 ?>
   <!DOCTYPE html>
   <html>
@@ -24,7 +27,13 @@ if (isset($_SESSION["usu_id"])) {
           <div class="tbl">
             <div class="tbl-row">
               <div class="tbl-cell">
-                <h3 id="lblnomidticket">Detalle Ticket - 1</h3>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                  <a href="../ConsultarTicket/" class="btn" title="Volver a Consultar Tickets" style="display: flex; align-items: center; gap: 8px; background-color: white; color: #333; border: 2px solid #ddd; border-radius: 25px; padding: 8px 16px; font-weight: 600; transition: all 0.3s ease;">
+                    <span style="font-size: 18px;">←</span>
+                  </a>
+                  <img src="../../public/img/usuario.png" alt="Logo" style="width: 50px; height: 50px; object-fit: contain; background-color: white; padding: 5px; border-radius: 8px; border: 1px solid #ddd;">
+                  <h3 id="lblnomidticket" style="margin: 0;">Detalle Ticket - 1</h3>
+                </div>
                 <span class="label label-pill label-success" id="lblnomusuario"></span>
                 <span class="label label-pill label-primary" id="lblfechcrea"></span>
                 <span id="lblestado"></span>
@@ -136,8 +145,3 @@ if (isset($_SESSION["usu_id"])) {
   </body>
 
   </html>
-<?php
-} else {
-  header("Location:" . Conectar::ruta() . "index.php");
-}
-?>

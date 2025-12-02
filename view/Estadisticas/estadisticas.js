@@ -163,15 +163,36 @@ $(document).ready(function(){
         console.log("Carga por día:", data);
         
         if (data.length > 0) {
+            // Transformar datos para Morris.Line
+            // Morris.js necesita que la data sea un array con propiedades simples
+            var chartData = [];
+            
+            data.forEach(function(item) {
+                // Crear objeto con fecha ISO como key y valor
+                var obj = {
+                    fecha: item.fecha,  // 2025-12-01
+                    value: parseInt(item.value)
+                };
+                chartData.push(obj);
+            });
+            
+            console.log("Chart data:", chartData);
+            
             new Morris.Line({
                 element: 'grafico_carga',
-                data: data,
-                xkey: 'label',
+                data: chartData,
+                xkey: 'fecha',
                 ykeys: ['value'],
                 labels: ['Tickets Creados'],
                 lineColors: ['#1AB244'],
                 pointSize: 5,
-                smooth: true
+                smooth: true,
+                xLabelFormat: function(d) {
+                    // Mostrar formato DD/MM en lugar de fecha ISO
+                    var day = d.getDate();
+                    var month = d.getMonth() + 1;
+                    return (day < 10 ? '0' : '') + day + '/' + (month < 10 ? '0' : '') + month;
+                }
             });
         } else {
             $('#grafico_carga').html('<p style="text-align: center; padding: 20px;">No hay datos disponibles</p>');

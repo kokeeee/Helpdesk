@@ -2,10 +2,23 @@
     require_once ("../config/conexion.php");
     require_once ("../models/Usuario.php");
 
+    // Verificar que el usuario esté autenticado
+    if (!isset($_SESSION["usu_id"])) {
+        header('HTTP/1.1 401 Unauthorized');
+        echo json_encode(array("success" => false, "message" => "No autenticado"));
+        exit();
+    }
+
     $usuario = new Usuario();
 
     switch ($_GET["op"]) {
         case "guardaryeditar":
+            // ✅ VALIDAR CSRF PARA OPERACIONES DE ESCRITURA
+            if (!validar_csrf_token($_POST['csrf_token'] ?? '')) {
+                echo json_encode(array("status" => "error", "mensaje" => "Error de seguridad: Token CSRF inválido"));
+                exit();
+            }
+            
             // Verificar que el usuario sea SuperAdmin (rol_id = 3) para gestionar usuarios
             if (!isset($_SESSION["rol_id"]) || $_SESSION["rol_id"] != 3) {
                 echo json_encode(array("status" => "error", "mensaje" => "No tienes permiso para acceder a esta sección. Solo SuperAdmin puede gestionar usuarios."));

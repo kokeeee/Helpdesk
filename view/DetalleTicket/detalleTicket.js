@@ -396,6 +396,7 @@ function listardetalle(tick_id){
         $('#cat_nom').val(data.cat_nom);
         $('#tick_asunto').val(data.tick_asunto);
         $('#tick_prioridad').val(data.prio_nom || 'N/A');
+        
         $('#fech_cierre').val(data.fech_cierre || 'Sin cerrar');
         $('#tickd_descripusu').summernote ('code',data.tick_descrip);
 

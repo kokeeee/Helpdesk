@@ -19,11 +19,12 @@ class Estadistica extends Conectar {
         $conectar = parent::Conexion();
         parent::set_names();
 
+        // ✅ CORREGIDO: Contar TICKETS ÚNICOS, no comentarios
         $sql = "SELECT 
                     tm_usuario.usu_id,
                     tm_usuario.nombre,
                     tm_usuario.apellido,
-                    COUNT(td_ticketdetalle.tickd_id) as total_cerrados
+                    COUNT(DISTINCT td_ticketdetalle.tick_id) as total_cerrados
                 FROM td_ticketdetalle
                 INNER JOIN tm_usuario ON td_ticketdetalle.usu_id = tm_usuario.usu_id
                 INNER JOIN tm_ticket ON td_ticketdetalle.tick_id = tm_ticket.tick_id
@@ -63,11 +64,12 @@ class Estadistica extends Conectar {
         $conectar = parent::Conexion();
         parent::set_names();
 
+        // ✅ CORREGIDO: Contar TICKETS ÚNICOS, no comentarios
         $sql = "SELECT 
                     tm_usuario.usu_id,
                     tm_usuario.nombre,
                     tm_usuario.apellido,
-                    COUNT(td_ticketdetalle.tickd_id) as total_cerrados
+                    COUNT(DISTINCT td_ticketdetalle.tick_id) as total_cerrados
                 FROM td_ticketdetalle
                 INNER JOIN tm_usuario ON td_ticketdetalle.usu_id = tm_usuario.usu_id
                 INNER JOIN tm_ticket ON td_ticketdetalle.tick_id = tm_ticket.tick_id
@@ -89,11 +91,12 @@ class Estadistica extends Conectar {
         $conectar = parent::Conexion();
         parent::set_names();
 
+        // ✅ CORREGIDO: Contar TICKETS ÚNICOS, no comentarios
         $sql = "SELECT 
                     tm_usuario.usu_id,
                     tm_usuario.nombre,
                     tm_usuario.apellido,
-                    COUNT(td_ticketdetalle.tickd_id) as total_cerrados
+                    COUNT(DISTINCT td_ticketdetalle.tick_id) as total_cerrados
                 FROM td_ticketdetalle
                 INNER JOIN tm_usuario ON td_ticketdetalle.usu_id = tm_usuario.usu_id
                 INNER JOIN tm_ticket ON td_ticketdetalle.tick_id = tm_ticket.tick_id
@@ -226,9 +229,11 @@ class Estadistica extends Conectar {
         $conectar = parent::Conexion();
         parent::set_names();
 
+        // Morris.js interpreta mejor fechas en formato ISO YYYY-MM-DD
+        // O usar un formato personalizado que no sea interpretado como número
         $sql = "SELECT 
                     DATE_FORMAT(tm_ticket.fecha_crea, '%Y-%m-%d') as fecha,
-                    DATE_FORMAT(tm_ticket.fecha_crea, '%d/%m') as label,
+                    CONCAT(DATE_FORMAT(tm_ticket.fecha_crea, '%d'), '/', DATE_FORMAT(tm_ticket.fecha_crea, '%m')) as label,
                     COUNT(*) as value
                 FROM tm_ticket
                 WHERE tm_ticket.fecha_crea >= DATE_SUB(NOW(), INTERVAL 7 DAY)

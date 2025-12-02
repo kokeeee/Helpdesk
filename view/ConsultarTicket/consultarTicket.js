@@ -54,7 +54,7 @@ function cargar_tabla_dinamica(operacion, parametros){
         "searching": true,
         lengthChange: false,
         colReorder: true,
-        "aaSorting": [[6, 'desc']],
+        "bSort": false,
         buttons: [		          
                 'copyHtml5',
                 'excelHtml5',
@@ -153,7 +153,7 @@ $(document).ready(function(){
                     "searching": true,
                     lengthChange: false,
                     colReorder: true,
-                    "aaSorting": [[6, 'desc']],
+                    "bSort": false,
                     buttons: [		          
                             'copyHtml5',
                             'excelHtml5',
@@ -222,7 +222,7 @@ $(document).ready(function(){
                 "searching": true,
                 lengthChange: false,
                 colReorder: true,
-                "aaSorting": [[6, 'desc']],
+                "bSort": false,
                 buttons: [		          
                         'copyHtml5',
                         'excelHtml5',
@@ -294,7 +294,7 @@ $(document).ready(function(){
                 "searching": true,
                 lengthChange: false,
                 colReorder: true,
-                "aaSorting": [[6, 'desc']],
+                "bSort": false,
                 buttons: [		          
                         'copyHtml5',
                         'excelHtml5',

@@ -7,6 +7,12 @@ class Usuario extends Conectar{
         parent::conexion(); // Inicializa $this->dbh
         parent::set_names();
         if (isset($_POST["enviar"])){
+            // ✅ VALIDAR CSRF ANTES DE PROCESAR
+            if (!validar_csrf_token($_POST['csrf_token'] ?? '')) {
+                header("Location:".Conectar::ruta()."view/index.php?m=3"); // m=3 para error CSRF
+                exit();
+            }
+            
             $correo = trim($_POST["correo"]);
             $contrasenia = $_POST["contrasenia"];
             $rol = $_POST["rol_id"];
@@ -24,8 +30,8 @@ class Usuario extends Conectar{
                 $resultado = $stmt->fetch();
 
                 if (is_array($resultado) && count($resultado)>0){
-                    // Verificar contraseña en plaintext (comparación directa)
-                    if ($contrasenia == $resultado["contrasenia"]){
+                    // Verificar contraseña usando password_verify (seguro con hash)
+                    if (password_verify($contrasenia, $resultado["contrasenia"])){
                         $_SESSION["usu_id"] = $resultado["usu_id"];
                         $_SESSION["nombre"] = $resultado["nombre"];
                         $_SESSION["apellido"] = $resultado["apellido"];
@@ -50,12 +56,15 @@ class Usuario extends Conectar{
         $conectar = parent::conexion();  
         parent::set_names();
         
+        // Hash de la contraseña antes de guardar
+        $contrasenia_hash = password_hash($contrasenia, PASSWORD_BCRYPT);
+        
         $sql = "INSERT INTO tm_usuario (usu_id, nombre, apellido, correo, contrasenia, rol_id, fecha_crea, fecha_modifi, fecha_elim, estado) VALUES (NULL, ?, ?, ?, ?, ?, NOW(), NOW(), '0000-00-00 00:00:00', 1)";
         $sql = $conectar->prepare($sql);
         $sql->bindValue(1, $nombre);
         $sql->bindValue(2, $apellido);
         $sql->bindValue(3, $correo);
-        $sql->bindValue(4, $contrasenia);
+        $sql->bindValue(4, $contrasenia_hash);
         $sql->bindValue(5, $rol_id);
         $sql->execute();
         
@@ -67,12 +76,14 @@ class Usuario extends Conectar{
         parent::set_names();
 
         if (!empty($contrasenia)) {
+            // Hash de la contraseña si se proporciona una nueva
+            $contrasenia_hash = password_hash($contrasenia, PASSWORD_BCRYPT);
             $sql = "UPDATE tm_usuario SET nombre = ?, apellido = ?, correo = ?, contrasenia = ?, rol_id = ?, fecha_modifi = NOW() WHERE usu_id = ?";
             $stmt = $conectar->prepare($sql);
             $stmt->bindValue(1, $nombre);
             $stmt->bindValue(2, $apellido);
             $stmt->bindValue(3, $correo);
-            $stmt->bindValue(4, $contrasenia);
+            $stmt->bindValue(4, $contrasenia_hash);
             $stmt->bindValue(5, $rol_id);
             $stmt->bindValue(6, $usu_id);
         } else {

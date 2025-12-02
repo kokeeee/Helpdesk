@@ -9,9 +9,12 @@ $(document).ready(function(){
         }
         
         // Obtener tickets pendientes con respuestas sin leer
-        $.post("../../controller/ticket.php?op=contar_no_leidos_pendientes", { usu_asig: usu_id }, function(data) {
-            try {
-                var response = JSON.parse(data);
+        $.ajax({
+            url: "../../controller/ticket.php?op=contar_no_leidos_pendientes",
+            type: "post",
+            dataType: "json",
+            data: { usu_asig: usu_id },
+            success: function(response) {
                 var total = response.total || 0;
                 
                 if (total > 0) {
@@ -21,15 +24,19 @@ $(document).ready(function(){
                     $('#badge-pendientes').hide();
                     $('#badge-pendientes-admin').hide();
                 }
-            } catch(e) {
-                console.log("Error al parsear respuesta de pendientes");
+            },
+            error: function(xhr, status, error) {
+                console.log("Error al obtener pendientes:", error);
             }
         });
         
         // Obtener tickets en revisión con respuestas sin leer
-        $.post("../../controller/ticket.php?op=contar_no_leidos_revision", { usu_asig: usu_id }, function(data) {
-            try {
-                var response = JSON.parse(data);
+        $.ajax({
+            url: "../../controller/ticket.php?op=contar_no_leidos_revision",
+            type: "post",
+            dataType: "json",
+            data: { usu_asig: usu_id },
+            success: function(response) {
                 var total = response.total || 0;
                 
                 if (total > 0) {
@@ -39,8 +46,9 @@ $(document).ready(function(){
                     $('#badge-revision').hide();
                     $('#badge-revision-admin').hide();
                 }
-            } catch(e) {
-                console.log("Error al parsear respuesta de revisión");
+            },
+            error: function(xhr, status, error) {
+                console.log("Error al obtener revisión:", error);
             }
         });
     }

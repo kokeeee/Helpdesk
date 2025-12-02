@@ -1,6 +1,9 @@
 <?php
   require_once("../../config/conexion.php"); 
-  if(isset($_SESSION["usu_id"])){ 
+  if(!isset($_SESSION["usu_id"])) {
+    header("Location: ../error404.php?reason=not_logged_in");
+    exit();
+  }
 ?>
 <!DOCTYPE html>
 <html>
@@ -78,8 +81,3 @@
 
 </body>
 </html>
-<?php
-  } else {
-    header("Location:".Conectar::ruta()."index.php");
-  }
-?>

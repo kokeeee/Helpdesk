@@ -5,18 +5,55 @@ class Ticket extends Conectar {
         $conectar = parent::Conexion();
         parent::set_names();
 
+        // Obtener el nombre de la categoría para asignar prioridad
+        $sql_cat = "SELECT cat_nom FROM tm_categoria WHERE cat_id = ?";
+        $stmt_cat = $conectar->prepare($sql_cat);
+        $stmt_cat->bindValue(1, $cat_id);
+        $stmt_cat->execute();
+        $categoria = $stmt_cat->fetch();
+        $cat_nom = $categoria['cat_nom'] ?? '';
+
+        // Asignar prioridad según la categoría (devuelve número)
+        $prioridad = $this->obtener_id_prioridad_por_categoria($cat_nom);
+
         $sql = "INSERT INTO tm_ticket
-                (usu_id, cat_id, tick_asunto, tick_descrip, fecha_crea, est, tick_estado)
-                VALUES (?, ?, ?, ?, NOW(), 1, 'Abierto')";
+                (usu_id, cat_id, tick_asunto, tick_descrip, fecha_crea, est, tick_estado, tick_prioridad)
+                VALUES (?, ?, ?, ?, NOW(), 1, 'Abierto', ?)";
 
         $stmt = $conectar->prepare($sql);
         $stmt->bindValue(1, $usu_id);
         $stmt->bindValue(2, $cat_id);
         $stmt->bindValue(3, $tick_asunto);
         $stmt->bindValue(4, $tick_descrip);
+        $stmt->bindValue(5, $prioridad);
         $stmt->execute();
 
         return $conectar->lastInsertId();
+    }
+
+    public function obtener_id_prioridad_por_categoria($categoria) {
+        // Mapeo de categorías a ID de prioridades
+        // 1 = Baja, 2 = Media, 3 = Alta, 4 = Urgente
+        $categorias_prioridad = array(
+            'Cotizacion' => 4,      // Urgente
+            'Consulta Stock' => 3,  // Alta
+            'Personal' => 2,        // Media
+            'Otros' => 1            // Baja
+        );
+
+        return isset($categorias_prioridad[$categoria]) ? $categorias_prioridad[$categoria] : 2; // Por defecto Media
+    }
+
+    public function obtener_prioridad_por_categoria($categoria) {
+        // Mapeo de categorías a prioridades (DEPRECATED - usar obtener_id_prioridad_por_categoria)
+        $categorias_prioridad = array(
+            'Cotizacion' => 'Urgente',
+            'Consulta Stock' => 'Alta',
+            'Personal' => 'Media',
+            'Otros' => 'Baja'
+        );
+
+        return isset($categorias_prioridad[$categoria]) ? $categorias_prioridad[$categoria] : 'Media';
     }
 
     public function listar_ticket_por_usu($usu_id) {

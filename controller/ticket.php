@@ -2,10 +2,22 @@
     require_once '../config/conexion.php';
     require_once '../models/Ticket.php';
 
+    // Verificar que el usuario esté autenticado
+    if (!isset($_SESSION["usu_id"])) {
+        header('HTTP/1.1 401 Unauthorized');
+        echo json_encode(array("success" => false, "message" => "No autenticado"));
+        exit();
+    }
+
     $ticket = new Ticket();
 
     switch ($_GET["op"]) {
         case "insertar":
+            // ✅ VALIDAR CSRF PARA OPERACIONES DE ESCRITURA
+            if (!validar_csrf_token($_POST['csrf_token'] ?? '')) {
+                echo json_encode(array("success" => false, "message" => "Error de seguridad: Token CSRF inválido"));
+                exit();
+            }
             $usu_id = $_POST["usu_id"];
             $cat_id = $_POST["cat_id"];
             $tick_asunto = $_POST["tick_asunto"];
@@ -465,16 +477,19 @@
         // Contar respuestas sin leer en tickets pendientes
         case "contar_no_leidos_pendientes":
             $usu_asig = $_POST["usu_asig"];
-            $datos = $ticket->listar_tickets_pendientes($usu_asig);
+            $datos = $ticket->listar_tickets_pendientes_asignados($usu_asig);
             $total_no_leidos = 0;
             
-            foreach($datos as $row) {
-                $no_leidos = $ticket->contar_respuestas_no_leidas($row["tick_id"]);
-                if ($no_leidos > 0) {
-                    $total_no_leidos += $no_leidos;
+            if ($datos && is_array($datos)) {
+                foreach($datos as $row) {
+                    $no_leidos = $ticket->contar_respuestas_no_leidas($row["tick_id"]);
+                    if ($no_leidos > 0) {
+                        $total_no_leidos += $no_leidos;
+                    }
                 }
             }
             
+            header('Content-Type: application/json');
             echo json_encode(array("total" => $total_no_leidos));
         break;
 
@@ -484,13 +499,16 @@
             $datos = $ticket->listar_tickets_revision($usu_asig);
             $total_no_leidos = 0;
             
-            foreach($datos as $row) {
-                $no_leidos = $ticket->contar_respuestas_no_leidas($row["tick_id"]);
-                if ($no_leidos > 0) {
-                    $total_no_leidos += $no_leidos;
+            if ($datos && is_array($datos)) {
+                foreach($datos as $row) {
+                    $no_leidos = $ticket->contar_respuestas_no_leidas($row["tick_id"]);
+                    if ($no_leidos > 0) {
+                        $total_no_leidos += $no_leidos;
+                    }
                 }
             }
             
+            header('Content-Type: application/json');
             echo json_encode(array("total" => $total_no_leidos));
         break;
 
